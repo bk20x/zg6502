@@ -1,6 +1,6 @@
 with Ada.Characters.Handling;
 package body Instructions is
-   function Cpu_Flag(Flag: Cpu_Flags) return Integer is 
+   function Cpu_Flag(Flag : Cpu_Flags) return Integer is 
    begin
       return Cpu_Flags'Enum_rep(Flag);
    end Cpu_Flag;
@@ -15,7 +15,7 @@ package body Instructions is
       Name : constant String := To_Upper(Instruction_Name);
    begin
       if Name = "AND" then
-         return AND_Op;
+         return AND_Op; --- bc AND is a keyword lol.
       else
          return Mnemonics'Value(Name);
       end if;
@@ -24,7 +24,7 @@ package body Instructions is
          raise Constraint_Error with "Invalid Mnemonic: " & Instruction_Name;
    end Mnemonic_Of_String;
 
-   function Lookup_Instruction(Name: Mnemonics; Mode: Addressing_Mode) return Instruction is
+   function Lookup_Instruction(Name : Mnemonics; Mode : Addressing_Mode) return Instruction is
       Candidates : constant Instruction_List_Access := Opcode_Table(Name);
    begin
       for Instr of Candidates.all loop

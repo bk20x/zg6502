@@ -7,3 +7,6 @@ maintainers = ["Your Name <example@example.com>"]
 licenses = "MIT"
 website = ""
 tags = []
+
+[build-switches]
+"*".style_checks = "No"

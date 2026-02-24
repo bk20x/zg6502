@@ -47,7 +47,7 @@ package Instructions is
       --- directives
       DB, DW, DCB, DS, ORG, EQU
   );
-  function Is_Directive(Mnemonic: Mnemonics) return Boolean;
+  function Is_Directive(Mnemonic : Mnemonics) return Boolean;
   function Mnemonic_Of_String(Instruction_Name : String) return Mnemonics;
   type Instruction is record
       Op_Code  : Byte;
@@ -58,7 +58,6 @@ package Instructions is
   type Instruction_List is array (Positive range <>) of Instruction;
   type Instruction_List_Access is access constant Instruction_List;
   type Mnemonic_Map is array (Mnemonics) of Instruction_List_Access;
- 
   LDA_Instructions : aliased constant Instruction_List := (
       (Op_Code => 16#A9#, Mode => Immediate,   Size => 2, Cycles => 2),
       (Op_Code => 16#A5#, Mode => Zero_Page,   Size => 2, Cycles => 3),
@@ -74,9 +73,7 @@ package Instructions is
       others => null
   );
   function Lookup_Instruction(
-      Name: Mnemonics;
-      Mode: Addressing_Mode
+      Name : Mnemonics;
+      Mode : Addressing_Mode
   ) return Instruction;
-
-
 end Instructions; 
