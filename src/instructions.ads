@@ -16,9 +16,8 @@ package Instructions is
       Absolute_Y,   -- 3
       Indirect      -- 3
    );
-
-  type Instruction_Size_Map is array (Addressing_Mode) of Positive; --- maybe remove this later and just case...
-  Instruction_Sizes : constant Instruction_Size_Map := (
+  type Instruction_Size_Table is array (Addressing_Mode) of Positive; 
+  Instruction_Sizes : constant Instruction_Size_Table := (
       Implied | Accumulator => 1,
       Immediate  | Zero_Page  | Zero_Page_X | Zero_Page_Y
       | Relative | Indirect_X | Indirect_Y => 2,
@@ -66,6 +65,10 @@ package Instructions is
   type Instruction_List is array (Positive range <>) of Instruction;
   type Instruction_List_Access is access constant Instruction_List;
   type Mnemonic_Map is array (Mnemonics) of Instruction_List_Access;
+  function Lookup_Instruction(
+      Name : Mnemonics;
+      Mode : Addressing_Mode
+  ) return Instruction;
   ADC_Instructions : aliased constant Instruction_List := (
       (Op_Code => 16#69#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
       (Op_Code => 16#65#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
@@ -75,6 +78,76 @@ package Instructions is
       (Op_Code => 16#79#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
       (Op_Code => 16#61#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
       (Op_Code => 16#71#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  AND_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#29#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#25#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#35#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#2D#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#3D#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#39#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#21#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#31#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  ASL_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#0A#, Mode => Accumulator, Size => Instruction_Sizes(Accumulator), Cycles => 2),
+      (Op_Code => 16#06#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#16#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#0E#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#1E#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  BCC_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#90#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BCS_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#B0#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BEQ_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#F0#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BIT_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#24#, Mode => Zero_Page, Size => Instruction_Sizes(Zero_Page), Cycles => 3),
+      (Op_Code => 16#2C#, Mode => Absolute,  Size => Instruction_Sizes(Absolute),  Cycles => 3)
+  );
+  BMI_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#30#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BNE_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#D0#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BPL_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#10#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BRK_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#00#, Mode => Implied, Size => 2, Cycles => 7)
+  );
+  BVC_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#50#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  BVS_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#70#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
+  );
+  CLC_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#18#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  CLD_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#D8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  CLI_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#58#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  CLV_Instructions : aliased constant Instruction_List := (
+      1 => (Op_Code => 16#B8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  CMP_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#C9#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#C5#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#D5#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#CD#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#DD#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#D9#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#C1#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#D1#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
   );
   LDA_Instructions : aliased constant Instruction_List := (
       (Op_Code => 16#A9#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
@@ -88,11 +161,24 @@ package Instructions is
   );
   Opcode_Table : constant Mnemonic_Map := (
       ADC    => ADC_Instructions'Access,
+      AND_Op => AND_Instructions'Access,
+      ASL    => ASL_Instructions'Access,
+      BCC    => BCC_Instructions'Access,
+      BCS    => BCS_Instructions'Access,
+      BEQ    => BEQ_Instructions'Access,
+      BIT    => BIT_Instructions'Access,
+      BMI    => BMI_Instructions'Access,
+      BNE    => BNE_Instructions'Access,
+      BPL    => BPL_Instructions'Access,
+      BRK    => BRK_Instructions'Access,
+      BVC    => BVC_Instructions'Access,
+      BVS    => BVC_Instructions'Access,
+      CLC    => CLC_Instructions'Access,
+      CLD    => CLD_Instructions'Access,
+      CLI    => CLI_Instructions'Access,
+      CLV    => CLV_Instructions'Access,
+      CMP    => CMP_Instructions'Access,
       LDA    => LDA_Instructions'Access,
       others => null
   );
-  function Lookup_Instruction(
-      Name : Mnemonics;
-      Mode : Addressing_Mode
-  ) return Instruction;
 end Instructions; 
