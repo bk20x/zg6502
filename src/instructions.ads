@@ -119,7 +119,7 @@ package Instructions is
       1 => (Op_Code => 16#10#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
   );
   BRK_Instructions : aliased constant Instruction_List := (
-      1 => (Op_Code => 16#00#, Mode => Implied, Size => 2, Cycles => 7)
+      1 => (Op_Code => 16#00#, Mode => Implied, Size => Instruction_Sizes(Implied) + 1, Cycles => 7) --- 1 byte padding for break mark
   );
   BVC_Instructions : aliased constant Instruction_List := (
       1 => (Op_Code => 16#50#, Mode => Relative, Size => Instruction_Sizes(Relative), Cycles => 1)
