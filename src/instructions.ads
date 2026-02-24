@@ -2,19 +2,27 @@ with Bytes;
 package Instructions is
   use Bytes;
   type Addressing_Mode is (
-      Implied,      
-      Absolute,     
-      Absolute_X,   
-      Absolute_Y,   
-      Immediate,    
-      Indirect,     
-      Indirect_X,   
-      Indirect_Y,   
-      Zero_Page,    
-      Zero_Page_X,  
-      Zero_Page_Y,  
-      Accumulator,  
-      Relative     
+      Implied,      -- 1
+      Accumulator,  -- 1
+      Immediate,    -- 2
+      Zero_Page,    -- 2
+      Zero_Page_X,  -- 2
+      Zero_Page_Y,  -- 2
+      Relative,     -- 2
+      Indirect_X,   -- 2
+      Indirect_Y,   -- 2
+      Absolute,     -- 3
+      Absolute_X,   -- 3
+      Absolute_Y,   -- 3
+      Indirect      -- 3
+   );
+
+  type Instruction_Size_Map is array (Addressing_Mode) of Positive; --- maybe remove this later and just case...
+  Instruction_Sizes : constant Instruction_Size_Map := (
+      Implied | Accumulator => 1,
+      Immediate  | Zero_Page  | Zero_Page_X | Zero_Page_Y
+      | Relative | Indirect_X | Indirect_Y => 2,
+      others => 3
   );
   type Cpu_Flags is (
     Negative,
@@ -58,17 +66,28 @@ package Instructions is
   type Instruction_List is array (Positive range <>) of Instruction;
   type Instruction_List_Access is access constant Instruction_List;
   type Mnemonic_Map is array (Mnemonics) of Instruction_List_Access;
+  ADC_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#69#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#65#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#75#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#6D#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4), 
+      (Op_Code => 16#7D#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#79#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#61#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#71#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
   LDA_Instructions : aliased constant Instruction_List := (
-      (Op_Code => 16#A9#, Mode => Immediate,   Size => 2, Cycles => 2),
-      (Op_Code => 16#A5#, Mode => Zero_Page,   Size => 2, Cycles => 3),
-      (Op_Code => 16#B5#, Mode => Zero_Page_X, Size => 2, Cycles => 4),
-      (Op_Code => 16#AD#, Mode => Absolute,    Size => 3, Cycles => 4),
-      (Op_Code => 16#BD#, Mode => Absolute_X,  Size => 3, Cycles => 4),
-      (Op_Code => 16#B9#, Mode => Absolute_Y,  Size => 3, Cycles => 4),
-      (Op_Code => 16#A1#, Mode => Indirect_X,  Size => 2, Cycles => 6),
-      (Op_Code => 16#B1#, Mode => Indirect_Y,  Size => 2, Cycles => 5)
+      (Op_Code => 16#A9#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#A5#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#B5#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#AD#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#BD#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#B9#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#A1#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#B1#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
   );
   Opcode_Table : constant Mnemonic_Map := (
+      ADC    => ADC_Instructions'Access,
       LDA    => LDA_Instructions'Access,
       others => null
   );
