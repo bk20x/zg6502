@@ -149,6 +149,57 @@ package Instructions is
       (Op_Code => 16#C1#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
       (Op_Code => 16#D1#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
   );
+  CPX_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#E0#, Mode => Immediate, Size => Instruction_Sizes(Immediate), Cycles => 2),
+      (Op_Code => 16#E4#, Mode => Zero_Page, Size => Instruction_Sizes(Zero_Page), Cycles => 3),
+      (Op_Code => 16#EC#, Mode => Absolute,  Size => Instruction_Sizes(Absolute),  Cycles => 4)
+  );
+  CPY_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#C0#, Mode => Immediate, Size => Instruction_Sizes(Immediate), Cycles => 2),
+      (Op_Code => 16#C4#, Mode => Zero_Page, Size => Instruction_Sizes(Zero_Page), Cycles => 3),
+      (Op_Code => 16#CC#, Mode => Absolute,  Size => Instruction_Sizes(Absolute),  Cycles => 4)
+  );
+  DEC_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#C6#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#D6#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#CE#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#DE#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  DEX_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#CA#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  DEY_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#88#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  EOR_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#49#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#45#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#55#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#4D#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#5D#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#59#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#41#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#51#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  INC_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#E6#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#F6#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#EE#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#FE#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  INX_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#E8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  INY_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#C8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  JMP_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#4C#, Mode => Absolute, Size => Instruction_Sizes(Absolute), Cycles => 3),
+      (Op_Code => 16#6C#, Mode => Indirect, Size => Instruction_Sizes(Indirect), Cycles => 5)
+  );
+  JSR_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#20#, Mode => Absolute, Size => Instruction_Sizes(Absolute), Cycles => 6)
+  );
   LDA_Instructions : aliased constant Instruction_List := (
       (Op_Code => 16#A9#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
       (Op_Code => 16#A5#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
@@ -158,6 +209,125 @@ package Instructions is
       (Op_Code => 16#B9#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
       (Op_Code => 16#A1#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
       (Op_Code => 16#B1#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  LDX_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#A2#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#A6#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#B6#, Mode => Zero_Page_Y, Size => Instruction_Sizes(Zero_Page_Y), Cycles => 4),
+      (Op_Code => 16#AE#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#BE#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4)
+  );
+  LDY_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#A0#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#A4#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#B4#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#AC#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#BC#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4)
+  );
+  LSR_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#4A#, Mode => Accumulator, Size => Instruction_Sizes(Accumulator), Cycles => 2),
+      (Op_Code => 16#46#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#56#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#4E#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#5E#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  NOP_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#EA#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  ORA_Instructions : aliased constant Instruction_List := (
+    (Op_code => 16#09#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+    (Op_Code => 16#05#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+    (Op_Code => 16#15#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+    (Op_Code => 16#0D#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+    (Op_Code => 16#1D#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+    (Op_Code => 16#19#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+    (Op_Code => 16#01#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+    (Op_code => 16#11#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  PHP_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#08#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 3)
+  );
+  PLA_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#68#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 4)
+  );
+  PLP_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#28#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 4)
+  );
+  ROL_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#2A#, Mode => Accumulator, Size => Instruction_Sizes(Accumulator), Cycles => 2),
+      (Op_Code => 16#26#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#36#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#2E#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#3E#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  ROR_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#6A#, Mode => Accumulator, Size => Instruction_Sizes(Accumulator), Cycles => 2),
+      (Op_Code => 16#66#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 5),
+      (Op_Code => 16#76#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 6),
+      (Op_Code => 16#6E#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 6),
+      (Op_Code => 16#7E#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 7)
+  );
+  RTI_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#40#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 6)
+  );
+  RTS_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#60#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 6)
+  );
+  SBC_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#E9#, Mode => Immediate,   Size => Instruction_Sizes(Immediate),   Cycles => 2),
+      (Op_Code => 16#E5#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#F5#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#ED#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#FD#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 4),
+      (Op_Code => 16#F9#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 4),
+      (Op_Code => 16#E1#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#F1#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 5)
+  );
+  SEC_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#38#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  SED_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#F8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  SEI_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#78#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  STA_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#85#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#95#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#8D#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4),
+      (Op_Code => 16#9D#, Mode => Absolute_X,  Size => Instruction_Sizes(Absolute_X),  Cycles => 5),
+      (Op_Code => 16#99#, Mode => Absolute_Y,  Size => Instruction_Sizes(Absolute_Y),  Cycles => 5),
+      (Op_Code => 16#81#, Mode => Indirect_X,  Size => Instruction_Sizes(Indirect_X),  Cycles => 6),
+      (Op_Code => 16#91#, Mode => Indirect_Y,  Size => Instruction_Sizes(Indirect_Y),  Cycles => 6)
+  );
+  STX_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#86#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#96#, Mode => Zero_Page_Y, Size => Instruction_Sizes(Zero_Page_Y), Cycles => 4),
+      (Op_Code => 16#8E#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4)
+  );
+  STY_Instructions : aliased constant Instruction_List := (
+      (Op_Code => 16#84#, Mode => Zero_Page,   Size => Instruction_Sizes(Zero_Page),   Cycles => 3),
+      (Op_Code => 16#94#, Mode => Zero_Page_X, Size => Instruction_Sizes(Zero_Page_X), Cycles => 4),
+      (Op_Code => 16#8C#, Mode => Absolute,    Size => Instruction_Sizes(Absolute),    Cycles => 4)
+  );
+  TAX_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#AA#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  TAY_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#A8#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  TSX_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#BA#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  TXA_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#8A#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  TXS_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#9A#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
+  );
+  TYA_Instructions : aliased constant Instruction_List := (
+    1 => (Op_Code => 16#98#, Mode => Implied, Size => Instruction_Sizes(Implied), Cycles => 2)
   );
   Opcode_Table : constant Mnemonic_Map := (
       ADC    => ADC_Instructions'Access,
@@ -178,7 +348,43 @@ package Instructions is
       CLI    => CLI_Instructions'Access,
       CLV    => CLV_Instructions'Access,
       CMP    => CMP_Instructions'Access,
+      CPX    => CPX_Instructions'Access,
+      CPY    => CPY_Instructions'Access,
+      DEC    => DEC_Instructions'Access,
+      DEX    => DEX_Instructions'Access,
+      DEY    => DEY_Instructions'Access,
+      EOR    => EOR_Instructions'Access,
+      INC    => INC_Instructions'Access,
+      INX    => INX_Instructions'Access,
+      INY    => INY_Instructions'Access,
+      JMP    => JMP_Instructions'Access,
+      JSR    => JSR_Instructions'Access,
       LDA    => LDA_Instructions'Access,
+      LDX    => LDX_Instructions'Access,
+      LDY    => LDY_Instructions'Access,
+      LSR    => LSR_Instructions'Access,
+      NOP    => NOP_Instructions'Access,
+      ORA    => ORA_Instructions'Access,
+      PHP    => PHP_Instructions'Access,
+      PLA    => PLA_Instructions'Access,
+      PLP    => PLP_Instructions'Access,
+      ROL    => ROL_Instructions'Access,
+      ROR    => ROR_Instructions'Access,
+      RTI    => RTI_Instructions'Access,
+      RTS    => RTS_Instructions'Access,
+      SBC    => SBC_Instructions'Access,
+      SEC    => SEC_Instructions'Access,
+      SED    => SED_Instructions'Access,
+      SEI    => SEI_Instructions'Access,
+      STA    => STA_Instructions'Access,
+      STX    => STX_Instructions'Access,
+      STY    => STY_Instructions'Access,
+      TAX    => TAX_Instructions'Access,
+      TAY    => TAY_Instructions'Access,
+      TSX    => TSX_Instructions'Access,
+      TXA    => TXA_Instructions'Access,
+      TXS    => TXS_Instructions'Access,
+      TYA    => TAY_Instructions'Access,
       others => null
-  );
+  );   
 end Instructions; 
