@@ -384,7 +384,7 @@ package Instructions is
       TSX    => TSX_Instructions'Access,
       TXA    => TXA_Instructions'Access,
       TXS    => TXS_Instructions'Access,
-      TYA    => TAY_Instructions'Access,
+      TYA    => TYA_Instructions'Access,
       others => null
   );   
 end Instructions; 
