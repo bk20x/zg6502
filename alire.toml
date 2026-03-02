@@ -10,3 +10,6 @@ tags = []
 
 [build-switches]
 "*".style_checks = "No"
+
+[[depends-on]]
+gnatprove = "^15.1.0"

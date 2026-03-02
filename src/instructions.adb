@@ -24,7 +24,7 @@ package body Instructions is
          raise Constraint_Error with "Invalid Mnemonic: " & Instruction_Name;
    end Mnemonic_Of_String;
 
-   function Lookup_Instruction(Name : Mnemonics; Mode : Addressing_Mode) return Instruction is
+   function Lookup_Instruction(Name : Opcode_Mnemonic; Mode : Addressing_Mode) return Instruction is
       Candidates : constant Instruction_List_Access := Opcode_Table(Name);
    begin
       for Instr of Candidates.all loop
