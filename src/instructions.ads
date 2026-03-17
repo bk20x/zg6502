@@ -29,7 +29,7 @@ package Instructions is
   Absolute_X_Size  : constant := 3;
   Absolute_Y_Size  : constant := 3;
   Indirect_Size    : constant := 3;
-  type Cpu_Flags is (
+  type Cpu_Flag is (
     Negative,
     Overflow,
     B0,
@@ -37,9 +37,10 @@ package Instructions is
     Decimal,
     Interrupt_Disable,
     Zero,
-    Carry
+    Carry,
+    None
   );
-  for Cpu_Flags use (
+  for Cpu_Flag use (
     Negative => 16#01#,
     Overflow => 16#02#,
     B0       => 16#04#,
@@ -47,9 +48,11 @@ package Instructions is
     Decimal  => 16#10#,
     Interrupt_Disable => 16#20#,
     Zero              => 16#40#,
-    Carry             => 16#80#
+    Carry             => 16#80#,
+    None              => 16#99#
   ); 
-  function Cpu_Flag(Flag: Cpu_Flags) return Integer;
+  type Cpu_Flags is array (Cpu_Flag) of Boolean;
+  function Cpu_Flag_Value(Flag: Cpu_Flag) return Integer;
   type Mnemonics is (
       ADC, AND_Op, ASL, BCC, BCS, BEQ, BIT, BMI, BNE, BPL, 
       BRK, BVC, BVS, CLC, CLD, CLI, CLV, CMP, CPX, CPY, 
@@ -60,9 +63,10 @@ package Instructions is
       --- directives
       DB, DW, DCB, DS, ORG, EQU
   );
-  subtype Opcode_Mnemonic is Mnemonics range ADC .. TYA;
-  function Is_Directive(Mnemonic : Mnemonics) return Boolean;
-  function Mnemonic_Of_String(Instruction_Name : String) return Mnemonics;
+  subtype Opcode_Mnemonics is Mnemonics range ADC .. TYA;
+  function Is_Directive (Mnemonic : Mnemonics) return Boolean;
+  function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags;
+  function Mnemonic_Of_String (Instruction_Name : String) return Mnemonics;
   type Instruction is record
       Op_Code  : Byte;
       Mode     : Addressing_Mode;
@@ -71,7 +75,7 @@ package Instructions is
   end record;
   type Instruction_List is array (Positive range <>) of Instruction;
   type Instruction_List_Access is access constant Instruction_List;
-  type Mnemonic_Map is array (Opcode_Mnemonic) of not null Instruction_List_Access;
+  type Opcode_Table is array (Opcode_Mnemonics) of not null Instruction_List_Access;
   ADC_Instructions : aliased constant Instruction_List := (
       (Op_Code => 16#69#, Mode => Immediate,   Size => Immediate_Size,   Cycles => 2),
       (Op_Code => 16#65#, Mode => Zero_Page,   Size => Zero_Page_Size,   Cycles => 3),
@@ -335,7 +339,7 @@ package Instructions is
   TYA_Instructions : aliased constant Instruction_List := (
     1 => (Op_Code => 16#98#, Mode => Implied, Size => Implied_Size, Cycles => 2)
   );
-  Opcode_Table : constant Mnemonic_Map := (
+  Opcodes : constant Opcode_Table := (
       ADC    => ADC_Instructions'Access,
       AND_Op => AND_Instructions'Access,
       ASL    => ASL_Instructions'Access,
@@ -394,7 +398,7 @@ package Instructions is
       TYA    => TYA_Instructions'Access
   );  
   function Lookup_Instruction(
-      Name : Opcode_Mnemonic;
+      Name : Opcode_Mnemonics;
       Mode : Addressing_Mode
   ) return Instruction;
 end Instructions; 

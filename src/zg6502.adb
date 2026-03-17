@@ -1,9 +1,11 @@
 with Ada.Text_IO;  use Ada.Text_IO;
 with Instructions; use Instructions;
-pragma Elaborate_All (Instructions);
+with Lexing; use Lexing;
 procedure Zg6502 is
-   L : constant Opcode_Mnemonic := LDA;
-   I : constant Instruction := Lookup_Instruction (Name => L, Mode => Indirect_X);
+   Lexer : Assembly_Lexer;
+   str : aliased String := "Yoben Broben!";
+   
 begin
-   Put_Line(I.Op_Code'Image);
+   Init_Lexer (Lexer => Lexer, Source => str'Unchecked_Access);
+
 end Zg6502;

@@ -1,14 +1,41 @@
 with Ada.Characters.Handling;
 package body Instructions is
-   function Cpu_Flag(Flag : Cpu_Flags) return Integer is 
+   function Cpu_Flag_Value(Flag : Cpu_Flag) return Integer is 
    begin
-      return Cpu_Flags'Enum_rep(Flag);
-   end Cpu_Flag;
+      return Cpu_Flag'Enum_rep(Flag);
+   end Cpu_Flag_Value;
 
    function Is_Directive(Mnemonic : Mnemonics) return Boolean is
    begin
-      return Mnemonic in DB .. EQU;
+      return Mnemonic not in Opcode_Mnemonics;
    end Is_Directive;
+
+   function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags is
+   begin
+      case Mnemonic is 
+         when ADC      => return (Negative | Overflow | Zero | Carry => True, others => False);
+         when AND_Op   => return (Negative | Zero => True, others => False);
+         when ASL      => return (Negative | Zero | Carry => True, others => False);
+         when BIT      => return (Negative | Overflow | Zero => True, others => False);
+         when CLC      => return (Carry => True, others => False);
+         when CLD      => return (Decimal => True, others => False);
+         when CLI      => return (Interrupt_Disable => True, others => False);
+         when CLV      => return (Overflow => True, others => False);
+         when CPX      => return (Negative | Zero | Carry => True, others => False);
+         when CPY      => return (Negative | Zero | Carry => True, others => False);
+         when DEC..LDY => return (Negative | Zero => True, others => False);
+         when LSR      => return (Negative | Zero | Carry => True, others => False);
+         when ORA      => return (Negative | Overflow | Zero => True, others => False);
+         when ROL..ROR => return (Negative | Zero | Carry => True, others => False);
+         when RTI..RTS => return (Negative..Carry => True, None => False);
+         when SBC      => return (Negative | Overflow | Zero | Carry => True, others => False);
+         when SEC      => return (Carry => True, others => False);
+         when SED      => return (Decimal => True, others => False);
+         when SEI      => return (Interrupt_Disable => True, others => False);
+         when others   => return (None => True, others => False); 
+      end case;
+   end Affected_Flags;
+
 
    function Mnemonic_Of_String(Instruction_Name : String) return Mnemonics is
       use Ada.Characters.Handling;
@@ -24,8 +51,8 @@ package body Instructions is
          raise Constraint_Error with "Invalid Mnemonic: " & Instruction_Name;
    end Mnemonic_Of_String;
 
-   function Lookup_Instruction(Name : Opcode_Mnemonic; Mode : Addressing_Mode) return Instruction is
-      Candidates : constant Instruction_List_Access := Opcode_Table(Name);
+   function Lookup_Instruction(Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Instruction is
+      Candidates : constant Instruction_List_Access := Opcodes(Name);
    begin
       for Instr of Candidates.all loop
          if Instr.Mode = Mode then
