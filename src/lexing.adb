@@ -13,9 +13,10 @@ package body Lexing is
       Pos : Positive := Lexer.Position;
       Buf : constant String_Access := Lexer.Buffer;
    begin
-      while Pos < Lexer.Bufsize and then Character'Pos(Buf(Pos)) in Whitespace_Chars loop
+      while Pos <= Lexer.Bufsize and then Character'Pos(Buf(Pos)) in Whitespace_Chars loop
          if Buf(Pos) = LF then
             Lexer.Token := (Kind => End_Of_Line);
+            exit;
          end if;
          Pos := Pos + 1;
       end loop;
