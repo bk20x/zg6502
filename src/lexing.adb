@@ -24,17 +24,18 @@ package body Lexing is
    end Skip_Whitespace;
 
    procedure Parse_Literal (Lexer : in out Assembly_Lexer; Hex : Boolean := False) is
+      use Ada.Characters.Handling;
       subtype Hex_Chars is Character range 'A'..'F';
       subtype Hex_Digits is Character range '0'..'9';
       Buf    : constant String_Access := Lexer.Buffer;
       Result : Integer := 0;
-      Hex_Int    : Integer := 0;
+      Hex_Int: Integer := 0;
       C      : Character;
    begin
       if Hex then
          while Has_More (Lexer) loop
-            C := Buf(Lexer.Pos);
-            if C in Hex_Chars | Hex_Digits | 'a'..'f' then
+            C := To_Upper(Buf(Lexer.Pos));
+            if C in Hex_Chars | Hex_Digits then
                Hex_Int := Parse_Hex_Int(C); --- later check if it is Invalid_Hex_Integer and report to user when i start tracking some more useful stuff like line no
                Result  := (Result * 16) + Hex_Int;
                Lexer.Pos := Lexer.Pos + 1;
