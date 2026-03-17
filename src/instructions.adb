@@ -1,11 +1,11 @@
 with Ada.Characters.Handling;
 package body Instructions is
-   function Cpu_Flag_Value(Flag : Cpu_Flag) return Integer is 
+   function Cpu_Flag_Value (Flag : Cpu_Flag) return Integer is 
    begin
       return Cpu_Flag'Enum_rep(Flag);
    end Cpu_Flag_Value;
 
-   function Is_Directive(Mnemonic : Mnemonics) return Boolean is
+   function Is_Directive (Mnemonic : Mnemonics) return Boolean is
    begin
       return Mnemonic not in Opcode_Mnemonics;
    end Is_Directive;
@@ -37,7 +37,7 @@ package body Instructions is
    end Affected_Flags;
 
 
-   function Mnemonic_Of_String(Instruction_Name : String) return Mnemonics is
+   function Mnemonic_Of_String (Instruction_Name : String) return Mnemonics is
       use Ada.Characters.Handling;
       Name : constant String := To_Upper(Instruction_Name);
    begin
@@ -50,8 +50,8 @@ package body Instructions is
       when Constraint_Error =>
          raise Constraint_Error with "Invalid Mnemonic: " & Instruction_Name;
    end Mnemonic_Of_String;
-
-   function Lookup_Instruction(Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Instruction is
+   
+   function Lookup_Instruction (Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Instruction is
       Candidates : constant Instruction_List_Access := Opcodes(Name);
    begin
       for Instr of Candidates.all loop
