@@ -398,4 +398,6 @@ package Instructions is pragma Preelaborate;
       Name : Opcode_Mnemonics;
       Mode : Addressing_Mode
    ) return Instruction;
+
+   function Is_Valid_Literal_For (Mode : Addressing_Mode; Literal : Integer) return Boolean; 
 end Instructions; 

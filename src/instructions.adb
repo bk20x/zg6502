@@ -1,3 +1,4 @@
+with Sysdefs;
 with Ada.Characters.Handling;
 package body Instructions is
    function Cpu_Flag_Value (Flag : Cpu_Flag) return Integer is 
@@ -61,4 +62,18 @@ package body Instructions is
       end loop;
       raise Constraint_Error with "Invalid addressing mode " & Mode'Image & " for instruction " & Name'Image;
    end Lookup_Instruction;
+
+   function Is_Valid_Literal_For (Mode : Addressing_Mode; Literal : Integer) return Boolean is
+      use Sysdefs;
+   begin
+      case Mode is 
+         when Immediate | Zero_Page | Zero_Page_X | Zero_Page_Y | Indirect_X | Indirect_Y => 
+               return Literal in Data_Value_Range;
+         when Absolute | Absolute_X | Absolute_Y | Indirect => 
+               return Literal in Addr_Value_Range;
+         when Relative => 
+               return Literal in -128 .. 127;
+         when Implied | Accumulator => return False;
+      end case;
+   end Is_Valid_Literal_For;
 end Instructions;

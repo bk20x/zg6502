@@ -1,7 +1,6 @@
 with Ada.Characters.Latin_1;
 with Ada.Characters.Handling;
 with Ada.Text_IO; use Ada.Text_IO;
-with Lexing;
 package body Lexing is
    procedure Init_Lexer (Lexer : in out Assembly_Lexer; Source : String_Access) is
    begin
@@ -29,15 +28,15 @@ package body Lexing is
       subtype Hex_Digits is Character range '0'..'9';
       Buf    : constant String_Access := Lexer.Buffer;
       Result : Integer := 0;
-      Hex    : Integer := 0;
+      Hex_Int    : Integer := 0;
       C      : Character;
    begin
       if Hex then
          while Has_More (Lexer) loop
             C := Buf(Lexer.Pos);
             if C in Hex_Chars | Hex_Digits | 'a'..'f' then
-               Hex := Parse_Hex_Int(C); --- later check if it is Invalid_Hex_Integer and report to user when i start tracking some more useful stuff like line no
-               Result := (Result * 16) + Hex;
+               Hex_Int := Parse_Hex_Int(C); --- later check if it is Invalid_Hex_Integer and report to user when i start tracking some more useful stuff like line no
+               Result  := (Result * 16) + Hex_Int;
                Lexer.Pos := Lexer.Pos + 1;
             else
                exit;
