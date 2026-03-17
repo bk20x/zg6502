@@ -4,7 +4,6 @@ with Lexing; use Lexing;
 procedure Zg6502 is
    Lexer : Assembly_Lexer;
    str : aliased String := "0FFF";
-   
 begin
    Init_Lexer (Lexer => Lexer, Source => str'Unchecked_Access);
    Parse_Literal (Lexer, Hex => True);
