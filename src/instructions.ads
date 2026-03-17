@@ -15,19 +15,19 @@ package Instructions is pragma Preelaborate;
       Absolute_Y,  
       Indirect     
    );
-   Implied_Size     : constant := 1;
-   Accumulator_Size : constant := 1;
-   Immediate_Size   : constant := 2;
-   Zero_Page_Size   : constant := 2;
-   Zero_Page_X_Size : constant := 2;
-   Zero_Page_Y_Size : constant := 2;
-   Relative_Size    : constant := 2;
-   Indirect_X_Size  : constant := 2;
-   Indirect_Y_Size  : constant := 2;
-   Absolute_Size    : constant := 3;
-   Absolute_X_Size  : constant := 3;
-   Absolute_Y_Size  : constant := 3;
-   Indirect_Size    : constant := 3;
+   Implied_Size     : constant Byte := 1;
+   Accumulator_Size : constant Byte := 1;
+   Immediate_Size   : constant Byte := 2;
+   Zero_Page_Size   : constant Byte := 2;
+   Zero_Page_X_Size : constant Byte := 2;
+   Zero_Page_Y_Size : constant Byte := 2;
+   Relative_Size    : constant Byte := 2;
+   Indirect_X_Size  : constant Byte := 2;
+   Indirect_Y_Size  : constant Byte := 2;
+   Absolute_Size    : constant Byte := 3;
+   Absolute_X_Size  : constant Byte := 3;
+   Absolute_Y_Size  : constant Byte := 3;
+   Indirect_Size    : constant Byte := 3;
    type Cpu_Flag is (
       Negative,
       Overflow,
