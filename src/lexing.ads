@@ -20,7 +20,6 @@ package Lexing is
             Length : Natural;
          when Literal =>
             Value : Integer;
-            Hex   : Boolean;
          when others =>
             null;
       end case;

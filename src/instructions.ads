@@ -37,8 +37,7 @@ package Instructions is pragma Preelaborate;
       Decimal,
       Interrupt_Disable,
       Zero,
-      Carry,
-      None
+      Carry
    );
    for Cpu_Flag use (
       Negative => 16#01#,
@@ -48,11 +47,10 @@ package Instructions is pragma Preelaborate;
       Decimal  => 16#10#,
       Interrupt_Disable => 16#20#,
       Zero              => 16#40#,
-      Carry             => 16#80#,
-      None              => 16#99#
+      Carry             => 16#80#
    ); 
-   type Cpu_Flags is array (Cpu_Flag) of Boolean;
-   function Cpu_Flag_Value(Flag: Cpu_Flag) return Integer;
+   type Cpu_Flags is array (Cpu_Flag) of Boolean with Pack;
+   function Cpu_Flag_Value (Flag: Cpu_Flag) return Integer;
    type Mnemonics is (
       ADC, AND_Op, ASL, BCC, BCS, BEQ, BIT, BMI, BNE, BPL, 
       BRK, BVC, BVS, CLC, CLD, CLI, CLV, CMP, CPX, CPY, 

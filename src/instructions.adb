@@ -10,7 +10,7 @@ package body Instructions is
       return Mnemonic not in Opcode_Mnemonics;
    end Is_Directive;
 
-   function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags is
+   function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags is --- hmmm, keeping this as a function for now. if end up needing to use the flags alot i should put in another lookup table
    begin
       case Mnemonic is 
          when ADC      => return (Negative | Overflow | Zero | Carry => True, others => False);
@@ -27,12 +27,12 @@ package body Instructions is
          when LSR      => return (Negative | Zero | Carry => True, others => False);
          when ORA      => return (Negative | Overflow | Zero => True, others => False);
          when ROL..ROR => return (Negative | Zero | Carry => True, others => False);
-         when RTI..RTS => return (Negative..Carry => True, None => False);
+         when RTI..RTS => return (Negative..Carry => True);
          when SBC      => return (Negative | Overflow | Zero | Carry => True, others => False);
          when SEC      => return (Carry => True, others => False);
          when SED      => return (Decimal => True, others => False);
          when SEI      => return (Interrupt_Disable => True, others => False);
-         when others   => return (None => True, others => False); 
+         when others   => return (others => False); 
       end case;
    end Affected_Flags;
 
@@ -50,7 +50,7 @@ package body Instructions is
       when Constraint_Error =>
          raise Constraint_Error with "Invalid Mnemonic: " & Instruction_Name;
    end Mnemonic_Of_String;
-   
+
    function Lookup_Instruction (Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Instruction is
       Candidates : constant Instruction_List_Access := Opcodes(Name);
    begin
