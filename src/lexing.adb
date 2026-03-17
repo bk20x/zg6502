@@ -1,4 +1,4 @@
-with System;
+with Ada.Characters.Latin_1;
 package body Lexing is
    procedure Init_Lexer (Lexer : in out Assembly_Lexer; Source : String_Access) is
    begin
@@ -8,11 +8,15 @@ package body Lexing is
    end Init_Lexer;
 
    procedure Skip_Whitespace (Lexer : in out Assembly_Lexer) is 
-      type Whitespace_Range is range 0..32;
+      use Ada.Characters.Latin_1;
+      type Whitespace_Chars is range 0..32;
       Pos : Positive := Lexer.Position;
       Buf : constant String_Access := Lexer.Buffer;
    begin
-      while Pos < Lexer.Bufsize and Character'Pos(Buf(Pos)) in Whitespace_Range loop
+      while Pos < Lexer.Bufsize and then Character'Pos(Buf(Pos)) in Whitespace_Chars loop
+         if Buf(Pos) = LF then
+            Lexer.Token := (Kind => End_Of_Line);
+         end if;
          Pos := Pos + 1;
       end loop;
       Lexer.Position := Pos;

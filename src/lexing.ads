@@ -3,7 +3,7 @@ package Lexing is
       Mnemonic,    
       Identifier,  -- Labels or symbols
       Literal,     --
-      Directive,   -- .dcb
+      Directive,   -- .dcb, !dcb
       Immediate,   -- `#` 
       Comma,       
       Open_Paren,  
@@ -13,7 +13,7 @@ package Lexing is
       Invalid      
    );
    
-   type Token(Kind : Token_Kind := Invalid) is record 
+   type Token_Record (Kind : Token_Kind := Invalid) is record 
       case Kind is
          when Mnemonic | Identifier | Directive =>
             Name   : String(1 .. 32); 
@@ -28,7 +28,7 @@ package Lexing is
    type String_Access is access all String;
 
    type Assembly_Lexer is record
-      Current_Token : Token;
+      Token    : Token_Record;
       Position : Positive;
       Bufsize  : Positive;
       Buffer   : String_Access;      

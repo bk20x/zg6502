@@ -7,5 +7,5 @@ procedure Zg6502 is
    
 begin
    Init_Lexer (Lexer => Lexer, Source => str'Unchecked_Access);
-
+   Put_Line(Lexer.Buffer.all);
 end Zg6502;
