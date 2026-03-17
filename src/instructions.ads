@@ -1,19 +1,19 @@
 with Bytes; use Bytes;
 package Instructions is pragma Preelaborate;
    type Addressing_Mode is (
-     Implied,      -- 1
-      Accumulator,  -- 1
-      Immediate,    -- 2
-      Zero_Page,    -- 2
-      Zero_Page_X,  -- 2
-      Zero_Page_Y,  -- 2
-      Relative,     -- 2
-      Indirect_X,   -- 2
-      Indirect_Y,   -- 2
-      Absolute,     -- 3
-      Absolute_X,   -- 3
-      Absolute_Y,   -- 3
-      Indirect      -- 3
+      Implied,     
+      Accumulator, 
+      Immediate,   
+      Zero_Page,   
+      Zero_Page_X, 
+      Zero_Page_Y, 
+      Relative,    
+      Indirect_X,  
+      Indirect_Y,  
+      Absolute,    
+      Absolute_X,  
+      Absolute_Y,  
+      Indirect     
    );
    Implied_Size     : constant := 1;
    Accumulator_Size : constant := 1;
