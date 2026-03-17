@@ -1,6 +1,5 @@
-with Bytes;
+with Bytes; use Bytes;
 package Instructions is pragma Preelaborate;
-   use Bytes;
    type Addressing_Mode is (
      Implied,      -- 1
       Accumulator,  -- 1
