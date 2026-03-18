@@ -1,4 +1,4 @@
-package Lexing is
+package Lexing is pragma Preelaborate;
    type Token_Kind is (
       Identifier,  -- Labels or symbols or Mnemonics
       Literal,     --
