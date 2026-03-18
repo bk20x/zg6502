@@ -5,8 +5,8 @@ package body Inspecting is
    begin
       Put_Line ("(OpCode =>" & Instr.Op_Code'Image & "; Mode => " & Instr.Mode'Image & "; Size =>" & Instr.Size'Image & "; Cycles =>" & Instr.Cycles'Image  & ")");
    end Print_Instruction;
-   
-   procedure Print_Token (Token : Lexing.Token_Record) is 
+
+   procedure Print_Token (Tok : Lexing.Token) is 
    begin
       null;
    end Print_Token;

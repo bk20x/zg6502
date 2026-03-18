@@ -16,7 +16,7 @@ package Lexing is pragma Preelaborate;
    subtype Hex_Chars    is Character range 'A'..'F';
    subtype Digit_Chars  is Character range '0'..'9';
    subtype String_32    is String (1..32);
-   type Token_Record (Kind : Token_Kind := Invalid) is record 
+   type Token (Kind : Token_Kind := Invalid) is record 
       case Kind is
          when Identifier | Directive =>
             Name   : String_32; 
@@ -30,7 +30,7 @@ package Lexing is pragma Preelaborate;
 
    type String_Access is access all String;   
    type Assembly_Lexer is record
-      Token   : Token_Record;
+      Tok     : Token;
       Pos     : Positive;
       Bufsize : Positive;
       Buffer  : String_Access;      

@@ -20,7 +20,7 @@ package body Lexing is
    begin
       while Has_More (Lexer) and then Character'Pos(Buf(Lexer.Pos)) in Whitespace_Chars loop
          if Buf(Lexer.Pos) = LF then
-            Lexer.Token := (Kind => End_Of_Line);
+            Lexer.Tok := (Kind => End_Of_Line);
             exit;
          end if;
          Lexer.Pos := Lexer.Pos + 1;
@@ -54,7 +54,7 @@ package body Lexing is
             end if;
          end loop;
       end if;
-      Lexer.Token := (Kind => Literal, Value => Result);
+      Lexer.Tok := (Kind => Literal, Value => Result);
    end Parse_Literal;
 
    procedure Parse_Symbol (Lexer : in out Assembly_Lexer) is
@@ -75,7 +75,7 @@ package body Lexing is
             exit;
          end if;         
       end loop;
-      Lexer.Token := (Kind => Identifier, Name => Result, Length => Length);
+      Lexer.Tok := (Kind => Identifier, Name => Result, Length => Length);
    end Parse_Symbol;
 
 
@@ -88,25 +88,25 @@ package body Lexing is
       case To_Upper (Buf (Lexer.Pos)) is 
          when '#'          => 
             Inc(Lexer.Pos);
-            Lexer.Token := (Kind => Hash);
+            Lexer.Tok := (Kind => Hash);
          when ':'          => 
             Inc(Lexer.Pos);
-            Lexer.Token := (Kind => Colon);
+            Lexer.Tok := (Kind => Colon);
          when ','          => 
             Inc(Lexer.Pos);
-            Lexer.Token := (Kind => Comma);
+            Lexer.Tok := (Kind => Comma);
          when '('          => 
             Inc(Lexer.Pos);
-            Lexer.Token := (Kind => Open_Paren);
+            Lexer.Tok := (Kind => Open_Paren);
          when ')'          => 
             Inc(Lexer.Pos);
-            Lexer.Token := (Kind => Close_Paren);
+            Lexer.Tok := (Kind => Close_Paren);
          when '$' => 
             Inc(Lexer.Pos);
             Parse_Literal (Lexer, Hex => True);
          when Symbol_Chars => Parse_Symbol (Lexer);
          when Digit_Chars  => Parse_Literal (Lexer);
-         when others => Lexer.Token := (Kind => Invalid);
+         when others => Lexer.Tok := (Kind => Invalid);
       end case;
    end Advance;
 end Lexing;
