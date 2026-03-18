@@ -397,11 +397,13 @@ package Instructions is pragma Preelaborate;
       TXS    => TXS_Instructions'Access,
       TYA    => TYA_Instructions'Access
    );  
+   function In_Range_For_Mode (Mode : Addressing_Mode; Value : Integer) return Boolean; 
+
    function Has_Mode (Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Boolean is
       (for some Instr of Opcodes(Name).all => Instr.Mode = Mode);
+
    function Lookup_Instruction (
       Name : Opcode_Mnemonics;
       Mode : Addressing_Mode
-   ) return Instruction with Pre => Has_Mode (Name, Mode);
-   function Is_Valid_Literal_For (Mode : Addressing_Mode; Literal : Integer) return Boolean; 
+   ) return Instruction;
 end Instructions; 

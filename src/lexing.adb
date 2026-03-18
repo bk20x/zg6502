@@ -11,16 +11,17 @@ package body Lexing is
       Lexer.Buffer  := Source;
       Lexer.Pos     := Source.all'First;
       Lexer.Bufsize := Source.all'Length;
+      Lexer.Line    := 1;
    end Init_Lexer;
 
    procedure Skip_Whitespace (Lexer : in out Assembly_Lexer) is 
       use Ada.Characters.Latin_1;
-      type Whitespace_Chars is range 0..32;
       Buf : constant String_Access := Lexer.Buffer;
    begin
       while Has_More (Lexer) and then Character'Pos(Buf(Lexer.Pos)) in Whitespace_Chars loop
          if Buf(Lexer.Pos) = LF then
             Lexer.Tok := (Kind => End_Of_Line);
+            Inc(Lexer.Line);
             exit;
          end if;
          Lexer.Pos := Lexer.Pos + 1;
@@ -48,7 +49,7 @@ package body Lexing is
             C := Buf(Lexer.Pos);
             if C in Digit_Chars then
                Result := (Result * 10) + (Character'Pos(C) - Character'Pos('0'));
-               Lexer.Pos := Lexer.Pos + 1;
+               Inc(Lexer.Pos);
             else
                exit;
             end if;
@@ -62,15 +63,30 @@ package body Lexing is
       Start  : constant Positive := Lexer.Pos;
       Buf    : constant String_Access := Lexer.Buffer;
       Result : String_32 := (others => ' ');
-      Length : Natural := 0;
+      Length : Positive  := 1;
       C      : Character;
    begin
-      while Has_More (Lexer) and then Length <= Result'Last loop
+      while Has_More (Lexer) loop
          C := To_Upper (Buf (Lexer.Pos));
-         if C in Symbol_Chars then
-            Lexer.Pos := Lexer.Pos + 1;
+         if C in Symbol_Chars | Digit_Chars then
+            Inc(Lexer.Pos);
             Length := Lexer.Pos - Start;
-            Result(Length) := C;
+            if Length <= Result'Last then
+               Result(Length) := C;
+            else --- Token is too big               
+               while Has_More (Lexer) and then Character'Pos(Buf(Lexer.Pos)) not in Whitespace_Chars loop
+                  Inc(Length);
+                  Inc(Lexer.Pos);
+               end loop;
+               declare
+                  Err_Msg : constant String := "Identifier exceeds 32 character limit: " & Buf(Start..Length);
+               begin
+                  Lexer.Tok := (Kind    => Error, 
+                                Message => (if Err_Msg'Length > 64 then Err_Msg(1..61) & "..." else Err_Msg), 
+                                Msg_Len => Integer'Min(Err_Msg'Length, 64));
+                  return;
+               end;
+            end if;
          else 
             exit;
          end if;         
@@ -78,13 +94,15 @@ package body Lexing is
       Lexer.Tok := (Kind => Identifier, Name => Result, Length => Length);
    end Parse_Symbol;
 
-
    procedure Advance (Lexer : in out Assembly_Lexer) is 
       use Ada.Characters.Handling;
-      use Ada.Characters.Latin_1;
       Buf : constant String_Access := Lexer.Buffer;
    begin
       Skip_Whitespace (Lexer);
+      if not Has_More (Lexer) then
+         Lexer.Tok := (Kind => End_Of_File);
+         return;
+      end if;
       case To_Upper (Buf (Lexer.Pos)) is 
          when '#'          => 
             Inc(Lexer.Pos);

@@ -58,17 +58,17 @@ package body Instructions is
       raise Constraint_Error with "Invalid addressing mode " & Mode'Image & " for instruction " & Name'Image;
    end Lookup_Instruction;
 
-   function Is_Valid_Literal_For (Mode : Addressing_Mode; Literal : Integer) return Boolean is
+   function In_Range_For_Mode (Mode : Addressing_Mode; Value : Integer) return Boolean is
       use Sysdefs;
    begin
       case Mode is 
          when Immediate | Zero_Page | Zero_Page_X | Zero_Page_Y | Indirect_X | Indirect_Y => 
-               return Literal in Data_Value_Range;
+               return Value in Data_Value_Range;
          when Absolute | Absolute_X | Absolute_Y | Indirect => 
-               return Literal in Addr_Value_Range;
+               return Value in Addr_Value_Range;
          when Relative => 
-               return Literal in Integer(Integer_8'First) .. Integer(Integer_8'Last);
+               return Value in Integer(Integer_8'First) .. Integer(Integer_8'Last);
          when Implied | Accumulator => return False;
       end case;
-   end Is_Valid_Literal_For;
+   end In_Range_For_Mode;
 end Instructions;

@@ -9,18 +9,24 @@ package Lexing is pragma Preelaborate;
       Close_Paren, 
       Colon,       
       End_Of_Line, 
+      End_Of_File,
+      Error,
       Invalid      
    );
-   
-   subtype Symbol_Chars is Character range 'A'..'Z';
-   subtype Hex_Chars    is Character range 'A'..'F';
-   subtype Digit_Chars  is Character range '0'..'9';
-   subtype String_32    is String (1..32);
+   type Whitespace_Chars is range 0..32;
+   subtype Symbol_Chars  is Character range 'A'..'Z';
+   subtype Hex_Chars     is Character range 'A'..'F';
+   subtype Digit_Chars   is Character range '0'..'9';
+   subtype String_32     is String (1..32);
+   subtype String_64     is String (1..64);
    type Token (Kind : Token_Kind := Invalid) is record 
       case Kind is
          when Identifier | Directive =>
             Name   : String_32; 
-            Length : Natural;
+            Length : Positive;
+         when Error => 
+            Message : String_64;
+            Msg_Len : Positive;
          when Literal =>
             Value : Integer;
          when others =>
@@ -33,6 +39,7 @@ package Lexing is pragma Preelaborate;
       Tok     : Token;
       Pos     : Positive;
       Bufsize : Positive;
+      Line    : Positive;
       Buffer  : String_Access;      
    end record;
    procedure Inc (I : in out Integer; By : Integer := 1);
