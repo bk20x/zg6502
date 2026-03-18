@@ -58,6 +58,4 @@ package Lexing is pragma Preelaborate;
        when 'A' .. 'F' => Character'Pos(C) - Character'Pos('A') + 10,
        when 'a' .. 'f' => Character'Pos(C) - Character'Pos('a') + 10,
        when others     => Invalid_Hex_Integer);
-
-   
 end Lexing;

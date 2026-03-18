@@ -97,6 +97,7 @@ package body Lexing is
    procedure Advance (Lexer : in out Assembly_Lexer) is 
       use Ada.Characters.Handling;
       Buf : constant String_Access := Lexer.Buffer;
+      Err_Msg : String_64 := (others => ' ');
    begin
       Skip_Whitespace (Lexer);
       if not Has_More (Lexer) then
@@ -124,7 +125,10 @@ package body Lexing is
             Parse_Literal (Lexer, Hex => True);
          when Symbol_Chars => Parse_Symbol (Lexer);
          when Digit_Chars  => Parse_Literal (Lexer);
-         when others => Lexer.Tok := (Kind => Invalid);
+         when others => 
+            Err_Msg(1..20) := "Invalid Character: " & Buf(Lexer.Pos);
+            Lexer.Tok := (Kind => Error, Message => Err_Msg, Msg_Len => 20);
+            Inc(Lexer.Pos);
       end case;
    end Advance;
 end Lexing;

@@ -3,7 +3,7 @@ with Instructions; use Instructions;
 with Lexing; use Lexing;
 procedure Zg6502 is
    Lexer : Assembly_Lexer;
-   Input : aliased String := "yobeertoyobeertoyobeertoyobeertoo";
+   Input : aliased String := "yobeertoyobeertoyobeertoyobeertoo % ";
 begin
    Init_Lexer (Lexer  => Lexer, 
                Source => Input'Unchecked_Access);
