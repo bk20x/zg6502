@@ -51,7 +51,7 @@ package Instructions is pragma Preelaborate;
    type Cpu_Flags is array (Cpu_Flag) of Boolean with Pack;
    function Cpu_Flag_Value (Flag: Cpu_Flag) return Integer;
    type Mnemonics is (
-      ADC, AND_Op, ASL, BCC, BCS, BEQ, BIT, BMI, BNE, BPL, 
+      ADC, AND_Op,   ASL, BCC, BCS, BEQ, BIT, BMI, BNE, BPL, 
       BRK, BVC, BVS, CLC, CLD, CLI, CLV, CMP, CPX, CPY, 
       DEC, DEX, DEY, EOR, INC, INX, INY, JMP, JSR, LDA, 
       LDX, LDY, LSR, NOP, ORA, PHA, PHP, PLA, PLP, ROL, 
@@ -61,7 +61,10 @@ package Instructions is pragma Preelaborate;
       DB, DW, DCB, DS, ORG, EQU
    );
    subtype Opcode_Mnemonics is Mnemonics range ADC .. TYA;
-   function Is_Directive (Mnemonic : Mnemonics) return Boolean;
+   function Is_Mnemonic  (Symbol : String) return Boolean is 
+      (Symbol = "AND" or else (for some M in Mnemonics'Range => M'Image = Symbol)); --- probably temporary because this is easy, later i might use a static array of the mnemonics string values
+   function Is_Directive (Mnemonic : Mnemonics) return Boolean is 
+      (Mnemonic not in Opcode_Mnemonics);   
    function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags;
    function Mnemonic_Of_String (Instruction_Name : String) return Mnemonics;
    type Instruction is record
@@ -291,10 +294,10 @@ package Instructions is pragma Preelaborate;
       (Op_Code => 16#F1#, Mode => Indirect_Y,  Size => Indirect_Y_Size,  Cycles => 5)
    );
    SEC_Instructions : aliased constant Instruction_List := (
-       1 => (Op_Code => 16#38#, Mode => Implied, Size => Implied_Size, Cycles => 2)
+      1 => (Op_Code => 16#38#, Mode => Implied, Size => Implied_Size, Cycles => 2)
    );
    SED_Instructions : aliased constant Instruction_List := (
-       1 => (Op_Code => 16#F8#, Mode => Implied, Size => Implied_Size, Cycles => 2)
+      1 => (Op_Code => 16#F8#, Mode => Implied, Size => Implied_Size, Cycles => 2)
    );
    SEI_Instructions : aliased constant Instruction_List := (
       1 => (Op_Code => 16#78#, Mode => Implied, Size => Implied_Size, Cycles => 2)
@@ -334,7 +337,7 @@ package Instructions is pragma Preelaborate;
       1 => (Op_Code => 16#9A#, Mode => Implied, Size => Implied_Size, Cycles => 2)
    );
    TYA_Instructions : aliased constant Instruction_List := (
-       1 => (Op_Code => 16#98#, Mode => Implied, Size => Implied_Size, Cycles => 2)
+      1 => (Op_Code => 16#98#, Mode => Implied, Size => Implied_Size, Cycles => 2)
    );
    Opcodes : constant Opcode_Table := (
       ADC    => ADC_Instructions'Access,
@@ -394,10 +397,11 @@ package Instructions is pragma Preelaborate;
       TXS    => TXS_Instructions'Access,
       TYA    => TYA_Instructions'Access
    );  
+   function Has_Mode (Name : Opcode_Mnemonics; Mode : Addressing_Mode) return Boolean is
+      (for some Instr of Opcodes(Name).all => Instr.Mode = Mode);
    function Lookup_Instruction (
       Name : Opcode_Mnemonics;
       Mode : Addressing_Mode
-   ) return Instruction;
-
+   ) return Instruction with Pre => Has_Mode (Name, Mode);
    function Is_Valid_Literal_For (Mode : Addressing_Mode; Literal : Integer) return Boolean; 
 end Instructions; 

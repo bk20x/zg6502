@@ -6,11 +6,6 @@ package body Instructions is
       return Cpu_Flag'Enum_rep(Flag);
    end Cpu_Flag_Value;
 
-   function Is_Directive (Mnemonic : Mnemonics) return Boolean is
-   begin
-      return Mnemonic not in Opcode_Mnemonics;
-   end Is_Directive;
-
    function Affected_Flags (Mnemonic : Opcode_Mnemonics) return Cpu_Flags is --- hmmm, keeping this as a function for now. if end up needing to use the flags alot i should put in another lookup table
    begin
       case Mnemonic is 
@@ -72,7 +67,7 @@ package body Instructions is
          when Absolute | Absolute_X | Absolute_Y | Indirect => 
                return Literal in Addr_Value_Range;
          when Relative => 
-               return Literal in -128 .. 127;
+               return Literal in Integer(Integer_8'First) .. Integer(Integer_8'Last);
          when Implied | Accumulator => return False;
       end case;
    end Is_Valid_Literal_For;

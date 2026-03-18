@@ -25,19 +25,17 @@ package body Lexing is
 
    procedure Parse_Literal (Lexer : in out Assembly_Lexer; Hex : Boolean := False) is
       use Ada.Characters.Handling;
-      subtype Hex_Chars is Character range 'A'..'F';
+      subtype Hex_Chars  is Character range 'A'..'F';
       subtype Hex_Digits is Character range '0'..'9';
       Buf    : constant String_Access := Lexer.Buffer;
       Result : Integer := 0;
-      Hex_Int: Integer := 0;
       C      : Character;
    begin
       if Hex then
          while Has_More (Lexer) loop
-            C := To_Upper(Buf(Lexer.Pos));
-            if C in Hex_Chars | Hex_Digits then
-               Hex_Int := Parse_Hex_Int(C); --- later check if it is Invalid_Hex_Integer and report to user when i start tracking some more useful stuff like line no
-               Result  := (Result * 16) + Hex_Int;
+            C := To_Upper (Buf(Lexer.Pos));
+            if C in Hex_Chars | Hex_Digits then               
+               Result := (Result * 16) + Parse_Hex_Int(C); 
                Lexer.Pos := Lexer.Pos + 1;
             else
                exit;
@@ -56,4 +54,25 @@ package body Lexing is
       end if;
       Lexer.Token := (Kind => Literal, Value => Result);
    end Parse_Literal;
+
+   procedure Parse_Symbol (Lexer : in out Assembly_Lexer) is
+      use Ada.Characters.Handling;
+      Start  : constant Positive := Lexer.Pos;
+      Buf    : constant String_Access := Lexer.Buffer;
+      Result : String_32 := (others => ' ');
+      Length : Natural := 0;
+      C      : Character;
+   begin
+      while Has_More (Lexer) and then Length <= Result'Last loop
+         C := To_Upper (Buf(Lexer.Pos));
+         if C in Symbol_Chars then
+            Lexer.Pos := Lexer.Pos + 1;
+            Length := Lexer.Pos - Start;
+            Result(Length) := C;
+         else 
+            exit;
+         end if;         
+      end loop;
+      Lexer.Token := (Kind => Identifier, Name => Result, Length => Length);
+   end Parse_Symbol;
 end Lexing;

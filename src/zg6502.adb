@@ -3,9 +3,12 @@ with Instructions; use Instructions;
 with Lexing; use Lexing;
 procedure Zg6502 is
    Lexer : Assembly_Lexer;
-   str : aliased String := "0FFF";
+   Input : aliased String := "hello bro";
 begin
-   Init_Lexer (Lexer => Lexer, Source => str'Unchecked_Access);
-   Parse_Literal (Lexer, Hex => True);
-   Put_Line(Lexer.Token.Value'Image);
+   Init_Lexer (Lexer => Lexer, Source => Input'Unchecked_Access);
+   Parse_Symbol (Lexer);
+   Put_Line (Lexer.Token.Name);
+   Skip_Whitespace (Lexer);
+   Parse_Symbol (Lexer);
+   Put_Line (Lexer.Token.Name);
 end Zg6502;

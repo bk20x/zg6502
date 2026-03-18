@@ -8,15 +8,14 @@ project Zg6502 is
    for Main use ("zg6502.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use Zg6502_Config.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Zg6502_Config.Ada_Compiler_Switches & ("-gnata"); --- for Assert, Pre, Post
    end Compiler;
 
    package Binder is
-      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+      for Switches ("Ada") use ("-Es"); -- Symbolic traceback
    end Binder;
 
    package Install is
       for Artifacts (".") use ("share");
    end Install;
-
 end Zg6502;
