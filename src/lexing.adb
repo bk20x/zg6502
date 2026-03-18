@@ -1,7 +1,11 @@
 with Ada.Characters.Latin_1;
 with Ada.Characters.Handling;
-with Ada.Text_IO; use Ada.Text_IO;
 package body Lexing is
+   procedure Inc (I : in out Integer; By : Integer := 1) is 
+   begin
+      I := I + By;
+   end Inc;
+
    procedure Init_Lexer (Lexer : in out Assembly_Lexer; Source : String_Access) is
    begin
       Lexer.Buffer  := Source;
@@ -25,8 +29,6 @@ package body Lexing is
 
    procedure Parse_Literal (Lexer : in out Assembly_Lexer; Hex : Boolean := False) is
       use Ada.Characters.Handling;
-      subtype Hex_Chars  is Character range 'A'..'F';
-      subtype Hex_Digits is Character range '0'..'9';
       Buf    : constant String_Access := Lexer.Buffer;
       Result : Integer := 0;
       C      : Character;
@@ -34,7 +36,7 @@ package body Lexing is
       if Hex then
          while Has_More (Lexer) loop
             C := To_Upper (Buf(Lexer.Pos));
-            if C in Hex_Chars | Hex_Digits then               
+            if C in Hex_Chars | Digit_Chars then               
                Result := (Result * 16) + Parse_Hex_Int(C); 
                Lexer.Pos := Lexer.Pos + 1;
             else
@@ -44,7 +46,7 @@ package body Lexing is
       else
          while Has_More (Lexer) loop
             C := Buf(Lexer.Pos);
-            if C in Hex_Digits then
+            if C in Digit_Chars then
                Result := (Result * 10) + (Character'Pos(C) - Character'Pos('0'));
                Lexer.Pos := Lexer.Pos + 1;
             else
@@ -64,7 +66,7 @@ package body Lexing is
       C      : Character;
    begin
       while Has_More (Lexer) and then Length <= Result'Last loop
-         C := To_Upper (Buf(Lexer.Pos));
+         C := To_Upper (Buf (Lexer.Pos));
          if C in Symbol_Chars then
             Lexer.Pos := Lexer.Pos + 1;
             Length := Lexer.Pos - Start;
@@ -75,4 +77,36 @@ package body Lexing is
       end loop;
       Lexer.Token := (Kind => Identifier, Name => Result, Length => Length);
    end Parse_Symbol;
+
+
+   procedure Advance (Lexer : in out Assembly_Lexer) is 
+      use Ada.Characters.Handling;
+      use Ada.Characters.Latin_1;
+      Buf : constant String_Access := Lexer.Buffer;
+   begin
+      Skip_Whitespace (Lexer);
+      case To_Upper (Buf (Lexer.Pos)) is 
+         when '#'          => 
+            Inc(Lexer.Pos);
+            Lexer.Token := (Kind => Hash);
+         when ':'          => 
+            Inc(Lexer.Pos);
+            Lexer.Token := (Kind => Colon);
+         when ','          => 
+            Inc(Lexer.Pos);
+            Lexer.Token := (Kind => Comma);
+         when '('          => 
+            Inc(Lexer.Pos);
+            Lexer.Token := (Kind => Open_Paren);
+         when ')'          => 
+            Inc(Lexer.Pos);
+            Lexer.Token := (Kind => Close_Paren);
+         when '$' => 
+            Inc(Lexer.Pos);
+            Parse_Literal (Lexer, Hex => True);
+         when Symbol_Chars => Parse_Symbol (Lexer);
+         when Digit_Chars  => Parse_Literal (Lexer);
+         when others => Lexer.Token := (Kind => Invalid);
+      end case;
+   end Advance;
 end Lexing;

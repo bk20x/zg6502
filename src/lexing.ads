@@ -13,7 +13,9 @@ package Lexing is
    );
    
    subtype Symbol_Chars is Character range 'A'..'Z';
-   subtype String_32 is String (1..32);
+   subtype Hex_Chars    is Character range 'A'..'F';
+   subtype Digit_Chars  is Character range '0'..'9';
+   subtype String_32    is String (1..32);
    type Token_Record (Kind : Token_Kind := Invalid) is record 
       case Kind is
          when Identifier | Directive =>
@@ -33,12 +35,15 @@ package Lexing is
       Bufsize : Positive;
       Buffer  : String_Access;      
    end record;
-
+   procedure Inc (I : in out Integer; By : Integer := 1);
    procedure Init_Lexer (Lexer : in out Assembly_Lexer; Source : String_Access);
    procedure Skip_Whitespace (Lexer : in out Assembly_Lexer);
+   procedure Advance (Lexer : in out Assembly_Lexer);
+   procedure Parse_Literal (Lexer : in out Assembly_Lexer; Hex : Boolean := False);
+   procedure Parse_Symbol  (Lexer : in out Assembly_Lexer);
    function  Has_More (Lexer : in Assembly_Lexer) return Boolean is
       (Lexer.Pos <= Lexer.Bufsize);
-   
+
    Invalid_Hex_Integer : constant Integer := -1;
    function Parse_Hex_Int (C : Character) return Integer is
       (case C is
@@ -46,6 +51,6 @@ package Lexing is
        when 'A' .. 'F' => Character'Pos(C) - Character'Pos('A') + 10,
        when 'a' .. 'f' => Character'Pos(C) - Character'Pos('a') + 10,
        when others     => Invalid_Hex_Integer);
-   procedure Parse_Literal (Lexer : in out Assembly_Lexer; Hex : Boolean := False);
-   procedure Parse_Symbol  (Lexer : in out Assembly_Lexer);
+
+   
 end Lexing;
